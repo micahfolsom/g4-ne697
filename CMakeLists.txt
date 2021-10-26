@@ -23,6 +23,6 @@ add_executable(${APP_NAME} ${SOURCES})
 target_link_libraries(${APP_NAME} ${Geant4_LIBRARIES})
 
 add_custom_command(TARGET ${APP_NAME} PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-  ${PROJECT_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:${APP_NAME}>/scripts
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:${APP_NAME}>/scripts
 )
