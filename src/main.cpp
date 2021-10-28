@@ -3,6 +3,8 @@
 #include "G4VisExecutive.hh"
 #include "G4UImanager.hh"
 #include "QGSP_BERT_HP.hh"
+#include "actioninitialization.hpp"
+#include "detectorconstruction.hpp"
 
 int main(int argc, char* argv[]) {
     auto* run_manager = G4RunManagerFactory::CreateRunManager(
@@ -11,8 +13,10 @@ int main(int argc, char* argv[]) {
     auto physics_list = new QGSP_BERT_HP;
     physics_list->SetVerboseLevel(0);
     run_manager->SetUserInitialization(physics_list);
-    //run_manager->SetUserInitialization(new ne697::DetectorConstruction);
-    //run_manager->SetUserInitialization(new ne697::ActionInitialization);
+    // Geometry
+    run_manager->SetUserInitialization(new ne697::DetectorConstruction);
+    // Action classes
+    run_manager->SetUserInitialization(new ne697::ActionInitialization);
 
     // Check number of command-line args, which controls whether we run
     // in visual mode or batch mode

@@ -3,11 +3,13 @@
 #include "G4VUserActionInitialization.hh"
 
 namespace ne697 {
-    class ActionInitialization: public G4VUserActionInitialization {
-        public:
-            void BuildForMaster() const override final;
-            void Build() const override final;
-    };
+  class ActionInitialization: public G4VUserActionInitialization {
+    public:
+      ActionInitialization();
+      ~ActionInitialization();
+      void BuildForMaster() const override final;
+      void Build() const override final;
+  };
 }
 
 #endif
