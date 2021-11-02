@@ -1,5 +1,8 @@
 #include "actioninitialization.hpp"
 #include "globals.hh"
+#include "runaction.hpp"
+#include "pga.hpp"
+#include "eventaction.hpp"
 
 namespace ne697 {
   ActionInitialization::ActionInitialization():
@@ -13,10 +16,14 @@ namespace ne697 {
   }
 
   void ActionInitialization::BuildForMaster() const {
+    SetUserAction(new RunAction);
     return;
   }
 
   void ActionInitialization::Build() const {
+    SetUserAction(new RunAction);
+    SetUserAction(new PGA);
+    SetUserAction(new EventAction);
     return;
   }
 }
