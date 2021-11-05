@@ -18,10 +18,10 @@ namespace ne697 {
   }
 
   void Run::RecordEvent(G4Event const* event) {
-
+    /****** GEANT4 BOILERPLATE ******/
     auto hc_id = G4SDManager::GetSDMpointer()->GetCollectionID("world_sd_hits");
     if (hc_id == -1) {
-      G4cerr << "HC ID was < 0; it was not Initialized()'d!" << G4endl;
+      G4cerr << "HC ID was < 0; it was not Initialize()'d!" << G4endl;
       return;
     }
     auto hc_ev = event->GetHCofThisEvent();
@@ -35,10 +35,18 @@ namespace ne697 {
       G4cerr << "Failed to grab hits collection object" << G4endl;
       return;
     }
-
+    /****** GEANT4 BOILERPLATE ******/
+    // Ok, now we've got the container (which is a pointer)
     G4cout << "Event had " << hc->entries() << " hits" << G4endl;
     for (std::size_t ihit = 0; ihit < hc->entries(); ++ihit) {
-      Hit* hit_in = dynamic_cast<Hit*>((*hc)[ihit]);
+      // (*hc)[ihit] means we FIRST de-reference hc with the *, then we access
+      // the [ihit] element. The parentheses makes it so the de-reference happens
+      // first, then we just have a vector-like object we can use [] on
+      // Finally, we must also cast to our Hit; remember, Geant4 is keeping a
+      // pointer to a G4VHit, which we inherit from with Hit
+      auto hit_in = dynamic_cast<Hit*>((*hc)[ihit]);
+      // Same as...
+      //Hit* hit_in = dynamic_cast<Hit*>((*hc)[ihit]);
       hit_in->setEventID(event->GetEventID());
       G4cout << "Event ID: " << hit_in->getEventID() << "\n";
       G4cout << "Track ID: " << hit_in->getTrackID() << "\n";
@@ -53,6 +61,9 @@ namespace ne697 {
             << G4endl;
       m_hits.push_back(*hit_in);
     }
+
+    // Don't forget to call the base class RecordEvent! Geant4 does some
+    // bookkeeping
     G4Run::RecordEvent(event);
     return;
   }
@@ -63,6 +74,8 @@ namespace ne697 {
     for (auto& hit : hits) {
       m_hits.push_back(hit);
     }
+
+    // Don't forget to call the base class Merge! Geant4 does some bookkeeping
     G4Run::Merge(from_run);
     return;
   }

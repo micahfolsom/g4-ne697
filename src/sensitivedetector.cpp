@@ -8,11 +8,14 @@ namespace ne697 {
     m_id(-1),
     m_hitsCollection(nullptr)
     {
+      /****** GEANT4 BOILERPLATE ******/
       G4String hc_name = name + "_hits";
       collectionName.insert(hc_name);
+      /****** GEANT4 BOILERPLATE ******/
     }
 
     void SensitiveDetector::Initialize(G4HCofThisEvent* hc) {
+      /****** GEANT4 BOILERPLATE ******/
       if (m_id < 0) { 
         m_id = GetCollectionID(0);
       } 
@@ -22,6 +25,7 @@ namespace ne697 {
       // Give the collection to the G4Event, so we can get it at the end
       // in Run::RecordEvent()
       hc->AddHitsCollection(m_id, m_hitsCollection);
+      /****** GEANT4 BOILERPLATE ******/
       return;
     }
 

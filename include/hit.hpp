@@ -40,25 +40,24 @@ namespace ne697 {
       double m_time;
   };
 
-  /*! Alias HitsCollection as G4THitsCollection<Hit>. */
+  /****** GEANT4 BOILERPLATE ******/
+  // Alias the HitsCollection type as G4THitsCollection<Hit>
   typedef G4THitsCollection<Hit> HitsCollection;
-  /*! Thread-local pointer for the Hit allocator. */
+  // Thread-local pointer for the Hit allocator
   extern G4ThreadLocal G4Allocator<Hit>* HitAllocator;
-
-// The two functions below must be defined *after* HitAllocator. */
-inline void* Hit::operator new(std::size_t) {
-  // If there's no allocator yet, make one, then return memory for
-  // a new Hit
-  if (!HitAllocator) {
-    HitAllocator = new G4Allocator<Hit>;
+  // The two functions below must be defined *after* HitAllocator
+  inline void* Hit::operator new(std::size_t) {
+    // If there's no allocator yet, make one, then return memory for a new Hit
+    if (!HitAllocator) {
+      HitAllocator = new G4Allocator<Hit>;
+    }
+    return (void*)HitAllocator->MallocSingle();
   }
-  return (void*)HitAllocator->MallocSingle();
-  }
-
   inline void Hit::operator delete(void* a_hit) {
     HitAllocator->FreeSingle((Hit*)a_hit);
     return;
   }
+  /****** GEANT4 BOILERPLATE ******/
 }
 
 #endif

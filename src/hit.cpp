@@ -1,7 +1,9 @@
 #include "hit.hpp"
 
 namespace ne697 {
+  /****** GEANT4 BOILERPLATE ******/
   G4ThreadLocal G4Allocator<Hit>* HitAllocator = nullptr;
+  /****** GEANT4 BOILERPLATE ******/
 
   Hit::Hit(int track_id, int parent_id, G4String const& volume,
          G4String const& particle, G4String const& process,
