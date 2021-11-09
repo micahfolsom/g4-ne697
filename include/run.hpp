@@ -12,7 +12,7 @@ namespace ne697 {
       void RecordEvent(G4Event const* event) override final;
       void Merge(G4Run const* from_run) override final;
 
-      std::vector<Hit> getHits() const;
+      std::vector<Hit> get_hits() const;
 
     private:
       std::vector<Hit> m_hits;

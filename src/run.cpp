@@ -70,7 +70,7 @@ namespace ne697 {
 
   void Run::Merge(G4Run const* from_run) {
     auto other_run = dynamic_cast<Run const*>(from_run);
-    auto hits = other_run->getHits();
+    auto hits = other_run->get_hits();
     for (auto& hit : hits) {
       m_hits.push_back(hit);
     }
@@ -80,7 +80,7 @@ namespace ne697 {
     return;
   }
 
-  std::vector<Hit> Run::getHits() const {
+  std::vector<Hit> Run::get_hits() const {
     return m_hits;
   }
 }
