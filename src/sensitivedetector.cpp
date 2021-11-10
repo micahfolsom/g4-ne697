@@ -31,8 +31,8 @@ namespace ne697 {
 
     bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory*) {
         auto track = step->GetTrack();
-        // "must use class tag", I think G4VSensitiveDetector must have a Hit
-        // member?
+        // "must use class tag", G4VSensitiveDetector has a member function
+        // called Hit() so this would be ambiguous
         auto hit = new ne697::Hit(
             track->GetTrackID(), track->GetParentID(), track->GetVolume()->GetName(),
             track->GetDefinition()->GetParticleName(),
@@ -41,16 +41,6 @@ namespace ne697 {
             track->GetPosition(), step->GetTotalEnergyDeposit(),
             track->GetGlobalTime());
         m_hitsCollection->insert(hit);
-        // DEBUG
-        G4cout << "Got a hit!" << G4endl;
-        G4cout << "Volume: " << hit->getVolume() << "\n";
-        G4cout << "Particle: " << hit->getParticle() << "\n";
-        G4cout << "Creator process: " << hit->getProcess() << "\n";
-        G4cout << "Position: " << G4BestUnit(hit->getPosition(), "Length") << "\n";
-        G4cout << "Energy deposited: " << G4BestUnit(hit->getEnergy(), "Energy")
-              << "\n";
-        G4cout << "Time: " << G4BestUnit(hit->getTime(), "Time") << "\n" << G4endl;
-        // DEBUG
         return true;
     }
 }
