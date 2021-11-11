@@ -13,6 +13,7 @@ namespace ne697 {
     m_trackingVols()
   {
     G4cout << "Creating DetectorConstruction" << G4endl;
+    build_materials();
   }
 
   DetectorConstruction::~DetectorConstruction() {
@@ -22,7 +23,8 @@ namespace ne697 {
   G4PVPlacement* DetectorConstruction::Construct() {
     auto world_solid = new G4Box("world_solid", 0.5*m, 0.5*m, 0.5*m);
     auto nist = G4NistManager::Instance();
-    auto world_mat = nist->FindOrBuildMaterial("G4_AIR");
+    //auto world_mat = nist->FindOrBuildMaterial("G4_AIR");
+    auto world_mat = nist->FindOrBuildMaterial("NE697_LIQUID_OXYGEN");
     auto world_log = new G4LogicalVolume(
         world_solid,
         world_mat,
@@ -67,6 +69,28 @@ namespace ne697 {
     for (auto& log : m_trackingVols) {
       SetSensitiveDetector(log, sd);
     }
+    return;
+  }
+
+  void DetectorConstruction::build_materials() {
+    auto o16 = new G4Isotope("NE697_O16", 8, 16, 15.99491463*g/mole);
+    auto o17 = new G4Isotope("NE697_O17", 8, 17, 16.9991312*g/mole);
+    auto o18 = new G4Isotope("NE697_O18", 8, 18, 17.9991603*g/mole);
+
+    auto nat_o = new G4Element("NE697_natO", "O_ne697", 3);
+    nat_o->AddIsotope(o16, 99.757*perCent);    
+    nat_o->AddIsotope(o17, 0.038*perCent);    
+    nat_o->AddIsotope(o18, 0.205*perCent);
+
+    auto liq_o = new G4Material("NE697_LIQUID_OXYGEN", 1.141*g/cm3, 1);
+    liq_o->AddElement(nat_o, 1);
+    G4cout << "OUR MATERIAL: " << liq_o << G4endl;
+
+    auto nist_man = G4NistManager::Instance();
+    auto nist_o = nist_man->FindOrBuildElement("O");
+    auto nist_liq_o = new G4Material("NIST_LIQUID_OXYGEN", 1.141*g/cm3, 1);
+    nist_liq_o->AddElement(nist_o, 1);
+    G4cout << "NIST MATERIAL: " << nist_liq_o << G4endl;
     return;
   }
 }

@@ -3,16 +3,21 @@
 #include "run.hpp"
 #include <fstream>
 #include "G4SystemOfUnits.hh"
+#include "runmessenger.hpp"
 
 namespace ne697 {
   RunAction::RunAction():
-    G4UserRunAction()
+    G4UserRunAction(),
+    m_fSaveData(true),
+    m_path("hits.csv")
     {
       G4cout << "Creating RunAction" << G4endl;
+      m_messenger = new RunMessenger(this);
     }
 
   RunAction::~RunAction() {
     G4cout << "Deleting RunAction" << G4endl;
+    delete m_messenger;
   }
 
   G4Run* RunAction::GenerateRun() {
@@ -36,14 +41,34 @@ namespace ne697 {
     G4cout << "Finished processing " << nevents << " events" << G4endl;
     // We don't want to do this in every thread, just the master one!
     if (IsMaster()) {
-      G4cout << "Writing hits..." << G4endl;
-      write_hits(our_run->get_hits(), "hits.csv");
+      if (m_fSaveData) {
+        G4cout << "Writing hits..." << G4endl;
+        write_hits(our_run->get_hits());
+      }
     }
     return;
   }
 
-  void RunAction::write_hits(std::vector<Hit> hits, std::string const& file_path) {
-    std::ofstream out_file(file_path);
+  bool RunAction::save_data() const {
+    return m_fSaveData;
+  }
+
+  void RunAction::save_data(bool save) {
+    m_fSaveData = save;
+    return;
+  }
+
+  G4String const& RunAction::get_path() const {
+    return m_path;
+  }
+
+  void RunAction::set_path(G4String const& path) {
+    m_path = path;
+    return;
+  }
+
+  void RunAction::write_hits(std::vector<Hit> hits) {
+    std::ofstream out_file(m_path);
     out_file << "eventID,trackID,parentID,particle,creator_process,volume,";
     out_file << "x[cm],y[cm],z[cm],energy_dep[keV],time[ns]" << std::endl;
     for (std::size_t i=0;i < hits.size();++i) {

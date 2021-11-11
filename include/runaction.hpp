@@ -5,6 +5,10 @@
 #include "hit.hpp"
 
 namespace ne697 {
+  // Forward declaration, to address circular dependency with RunAction
+  // You still need to #include "runmessenger.hpp" in runaction.cpp
+  class RunMessenger;
+
   class RunAction: public G4UserRunAction {
     public:
       RunAction();
@@ -14,8 +18,17 @@ namespace ne697 {
       void BeginOfRunAction(G4Run const*) override final;
       void EndOfRunAction(G4Run const* run) override final;
 
+      bool save_data() const;
+      void save_data(bool save);
+      G4String const& get_path() const;
+      void set_path(G4String const& path);
+
     private:
-      void write_hits(std::vector<Hit> hits, std::string const& file_path);
+      void write_hits(std::vector<Hit> hits);
+
+      RunMessenger* m_messenger;
+      bool m_fSaveData;
+      G4String m_path;
   };
 }
 
