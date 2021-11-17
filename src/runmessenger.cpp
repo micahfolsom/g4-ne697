@@ -4,25 +4,25 @@
 namespace ne697 {
   RunMessenger::RunMessenger(RunAction* runaction):
     m_runAction(runaction)
-    {
-      // Directory: /ne697/run
-      m_directory = new G4UIdirectory("/ne697/run/");
-      m_directory->SetGuidance("Change parameters of the run.");
+  {
+    // Directory: /ne697/run
+    m_directory = new G4UIdirectory("/ne697/run/");
+    m_directory->SetGuidance("Change parameters of the run.");
 
-      // Toggle data saving: /ne697/run/save_data
-      m_saveDataCmd = new G4UIcmdWithABool("/ne697/run/save_data", this);
-      m_saveDataCmd->SetGuidance("Toggle saving data to file.");
-      m_saveDataCmd->SetParameterName("save_data", true);
-      m_saveDataCmd->SetDefaultValue(m_runAction->save_data());
-      m_saveDataCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    // Toggle data saving: /ne697/run/save_data
+    m_saveDataCmd = new G4UIcmdWithABool("/ne697/run/save_data", this);
+    m_saveDataCmd->SetGuidance("Toggle saving data to file.");
+    m_saveDataCmd->SetParameterName("save_data", true);
+    m_saveDataCmd->SetDefaultValue(m_runAction->save_data());
+    m_saveDataCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
-      // Save file path: /ne697/run/save_path
-      m_savePathCmd = new G4UIcmdWithAString("/ne697/run/save_path", this);
-      m_savePathCmd->SetGuidance("Save file path.");
-      m_savePathCmd->SetParameterName("save_path", true);
-      m_savePathCmd->SetDefaultValue(m_runAction->get_path());
-      m_savePathCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    }
+    // Save file path: /ne697/run/save_path
+    m_savePathCmd = new G4UIcmdWithAString("/ne697/run/save_path", this);
+    m_savePathCmd->SetGuidance("Save file path.");
+    m_savePathCmd->SetParameterName("save_path", true);
+    m_savePathCmd->SetDefaultValue(m_runAction->get_path());
+    m_savePathCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+  }
 
   RunMessenger::~RunMessenger() {
     delete m_directory;

@@ -6,18 +6,22 @@
 #include "G4SystemOfUnits.hh"
 #include "sensitivedetector.hpp"
 #include "G4SDManager.hh"
+#include "geometrymessenger.hpp"
 
 namespace ne697 {
   DetectorConstruction::DetectorConstruction():
     G4VUserDetectorConstruction(),
-    m_trackingVols()
+    m_trackingVols(),
+    m_detSize(10.*cm, 10.*cm, 10.*cm)
   {
     G4cout << "Creating DetectorConstruction" << G4endl;
+    m_messenger = new GeometryMessenger(this);
     build_materials();
   }
 
   DetectorConstruction::~DetectorConstruction() {
     G4cout << "Deleting DetectorConstruction" << G4endl;
+    delete m_messenger;
   }
 
   G4PVPlacement* DetectorConstruction::Construct() {
@@ -43,7 +47,10 @@ namespace ne697 {
         true
     );
 
-    auto det_solid = new G4Box("det_solid", 5*cm, 5*cm, 5*cm);
+    auto det_solid = new G4Box("det_solid",
+      m_detSize.getX() * 0.5,
+      m_detSize.getY() * 0.5,
+      m_detSize.getZ() * 0.5);
     auto det_mat = nist->FindOrBuildMaterial("G4_SODIUM_IODIDE");
     auto det_log = new G4LogicalVolume(det_solid, det_mat, "det_log");
     // Tracking Hits in this volume
@@ -92,5 +99,14 @@ namespace ne697 {
     nist_liq_o->AddElement(nist_o, 1);
     G4cout << "NIST MATERIAL: " << nist_liq_o << G4endl;
     return;
+  }
+
+  void DetectorConstruction::set_det_size(G4ThreeVector const& detsize) {
+    m_detSize = detsize;
+    return;
+  }
+
+  G4ThreeVector const& DetectorConstruction::get_det_size() const {
+    return m_detSize;
   }
 }

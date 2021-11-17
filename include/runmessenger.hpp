@@ -5,10 +5,11 @@
 #include "G4UIcmdWithAString.hh"
 
 namespace ne697 {
-  // Forward declaration, to resolve circular dependency with RunMessenger
+  // Forward declaration, to resolve circular dependency with RunAction
   // You still need to #include "runaction.hpp" in runmessenger.cpp
   class RunAction;
 
+  // User-facing part of the UI: just for the user
   class RunMessenger: public G4UImessenger {
   public:
     RunMessenger(RunAction* runaction);
