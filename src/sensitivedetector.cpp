@@ -16,11 +16,11 @@ namespace ne697 {
 
     void SensitiveDetector::Initialize(G4HCofThisEvent* hc) {
       /****** GEANT4 BOILERPLATE ******/
-      if (m_id < 0) { 
+      if (m_id < 0) {
         m_id = GetCollectionID(0);
-      } 
+      }
       // Create a hits collection for this SD
-      m_hitsCollection = 
+      m_hitsCollection =
           new HitsCollection(SensitiveDetectorName, collectionName[0]);
       // Give the collection to the G4Event, so we can get it at the end
       // in Run::RecordEvent()
@@ -31,6 +31,9 @@ namespace ne697 {
 
     bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory*) {
         auto track = step->GetTrack();
+        if (track->GetDefinition()->GetParticleName() != "opticalphoton") {
+          return true;
+        }
         // "must use class tag", G4VSensitiveDetector has a member function
         // called Hit() so this would be ambiguous
         auto hit = new ne697::Hit(

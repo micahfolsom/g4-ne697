@@ -5,12 +5,14 @@
 #include "QGSP_BERT_HP.hh"
 #include "actioninitialization.hpp"
 #include "detectorconstruction.hpp"
+#include "G4OpticalPhysics.hh"
 
 int main(int argc, char* argv[]) {
     auto* run_manager = G4RunManagerFactory::CreateRunManager(
         G4RunManagerType::Default);
     // Physics
     auto physics_list = new QGSP_BERT_HP;
+    physics_list->RegisterPhysics(new G4OpticalPhysics);
     physics_list->SetVerboseLevel(0);
     run_manager->SetUserInitialization(physics_list);
     // Geometry
@@ -29,7 +31,7 @@ int main(int argc, char* argv[]) {
         ui_manager->ApplyCommand("/control/macroPath scripts/");
         ui_manager->ApplyCommand("/control/execute scripts/init_vis.mac");
         ui->SessionStart();
-        delete ui; 
+        delete ui;
     } else if (argc == 2) {
         G4String cmd = "/control/execute " + (G4String)argv[1];
         ui_manager->ApplyCommand(cmd);
